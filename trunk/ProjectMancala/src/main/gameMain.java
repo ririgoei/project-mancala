@@ -35,8 +35,6 @@ public class gameMain extends JPanel implements MouseListener, KeyListener
 		
 		@SuppressWarnings("unused")
 		private boolean game_Running;
-		
-		int boardX, boardY, boardH, boardW;
 
 		//Builds the window YAY!
 		public static void main(String[] args)
@@ -57,6 +55,7 @@ public class gameMain extends JPanel implements MouseListener, KeyListener
 			drawBoard(g);
 		}
 		
+		//Place holder board.
 		public void drawBoard(Graphics g)
 		{
 			g.drawLine(0, 0, 0 + 600, 0);
@@ -90,9 +89,25 @@ public class gameMain extends JPanel implements MouseListener, KeyListener
 		
 		public gameMain()
 		{
-			game_Running = true;
+			@SuppressWarnings("unused")
+			long now, then = System.currentTimeMillis(), passed;
+			while(game_Running)
+			{
+				
+				now = System.currentTimeMillis();
+				passed = now - then;
+				then = now;
+				
+				//Update.
+				
+				//Draw function from paint component.
+				repaint();
+				//Throttle code in a Try/Catch.
+				try{Thread.sleep(100);}catch(Exception e){}
+				
+				//Input, going to be using mouse, working with that soon.
+			}
 			
-			repaint();
 			
 			
 		}

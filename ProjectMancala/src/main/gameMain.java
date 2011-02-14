@@ -33,9 +33,20 @@ import javax.swing.JPanel;
 	@SuppressWarnings("serial")
 public class gameMain extends JPanel implements MouseListener, KeyListener
 {
-		GameBoard Game = new GameBoard(true);
+		XY m_point = new XY();
+		/** whether or not the game is running */
+		/** width/height of the map in terms of columns and rows */
+		XY m_size = new XY();
+		XY[] m_bowlLocations = new XY[14];
+		GameBoard game;
+		
+
+
+		XY m_tileSize = new XY();
+		int m_input;
+		
+		@SuppressWarnings("unused")
 		private boolean game_Running;
-		int input;
 
 		//Builds the window YAY!
 		public static void main(String[] args)
@@ -82,26 +93,33 @@ public class gameMain extends JPanel implements MouseListener, KeyListener
 			g.fillOval(375, 110, 75, 75);
 			g.fillOval(450, 110, 75, 75);
 			g.setColor(Color.black);
-			
-			
-			
-			
 		}
 		
 		public gameMain()
+		{
+			// initialize all XY locations
+			for(int i =0; i < m_bowlLocations.length; i++)
+			{
+				m_bowlLocations[i] = new XY();
+			}
+			addMouseListener(this);
+			addKeyListener(this);
+			game_Running = true;
+			game = new GameBoard(true);
+		}
+		
+		public void run()
 		{
 			@SuppressWarnings("unused")
 			long now, then = System.currentTimeMillis(), passed;
 			while(game_Running)
 			{
-				
 				now = System.currentTimeMillis();
 				passed = now - then;
 				then = now;
 				
 				//Update.
-				update((int)(passed));
-				
+				game.update(m_input);
 				//Draw function from paint component.
 				repaint();
 				//Throttle code in a Try/Catch.
@@ -109,39 +127,19 @@ public class gameMain extends JPanel implements MouseListener, KeyListener
 				
 				//Input, going to be using mouse, working with that soon.
 			}
-			
-			
-			
 		}
-		
-
-		Point p = null;
-		
+				
 		//All of the input functions. Keyboard input, and Mouse input.
 		public void keyPressed(KeyEvent arg0) {
-			input = arg0.getKeyCode();
+			m_input = arg0.getKeyCode();
 		}
 		public void keyReleased(KeyEvent arg0) {}
 		public void keyTyped(KeyEvent arg0) {}
-		public void mouseClicked(MouseEvent e) {}
-		public void mouseEntered(MouseEvent e) {}
-		public void mouseExited(MouseEvent e) {}
-		public void mousePressed(MouseEvent e) {
-			System.out.println(e.getX()+" "+ e.getY());
-			p = e.getPoint();
-			repaint();
-		}
-		public void mouseReleased(MouseEvent e) {}
-		
-		public void update(int a_ms)
-		{
-			switch(input)
-			{
-			case 'A': Game.handleInput(input);
-			case 'D': Game.handleInput(input);
-			}
-			input = 0;
-		}
+		public void mouseClicked(MouseEvent arg0) {}
+		public void mouseEntered(MouseEvent arg0) {}
+		public void mouseExited(MouseEvent arg0) {}
+		public void mousePressed(MouseEvent arg0) {}
+		public void mouseReleased(MouseEvent arg0) {}
 		
 }
 

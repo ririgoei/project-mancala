@@ -2,6 +2,7 @@ package main;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -32,9 +33,9 @@ import javax.swing.JPanel;
 	@SuppressWarnings("serial")
 public class gameMain extends JPanel implements MouseListener, KeyListener
 {
-		
-		@SuppressWarnings("unused")
+		GameBoard Game = new GameBoard(true);
 		private boolean game_Running;
+		int input;
 
 		//Builds the window YAY!
 		public static void main(String[] args)
@@ -99,6 +100,7 @@ public class gameMain extends JPanel implements MouseListener, KeyListener
 				then = now;
 				
 				//Update.
+				update((int)(passed));
 				
 				//Draw function from paint component.
 				repaint();
@@ -113,16 +115,33 @@ public class gameMain extends JPanel implements MouseListener, KeyListener
 		}
 		
 
+		Point p = null;
 		
-		
-		public void keyPressed(KeyEvent arg0) {}
+		//All of the input functions. Keyboard input, and Mouse input.
+		public void keyPressed(KeyEvent arg0) {
+			input = arg0.getKeyCode();
+		}
 		public void keyReleased(KeyEvent arg0) {}
 		public void keyTyped(KeyEvent arg0) {}
-		public void mouseClicked(MouseEvent arg0) {}
-		public void mouseEntered(MouseEvent arg0) {}
-		public void mouseExited(MouseEvent arg0) {}
-		public void mousePressed(MouseEvent arg0) {}
-		public void mouseReleased(MouseEvent arg0) {}
+		public void mouseClicked(MouseEvent e) {}
+		public void mouseEntered(MouseEvent e) {}
+		public void mouseExited(MouseEvent e) {}
+		public void mousePressed(MouseEvent e) {
+			System.out.println(e.getX()+" "+ e.getY());
+			p = e.getPoint();
+			repaint();
+		}
+		public void mouseReleased(MouseEvent e) {}
+		
+		public void update(int a_ms)
+		{
+			switch(input)
+			{
+			case 'A': Game.handleInput(input);
+			case 'D': Game.handleInput(input);
+			}
+			input = 0;
+		}
 		
 }
 

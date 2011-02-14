@@ -76,7 +76,7 @@ public class GameBoard {
 			int index;
 			while(totalBeads < STANDARDBEADS * 12)
 			{
-				index = rand.nextInt() % 14;
+				index = rand.nextInt(14);
 				if(!((index+1) % 7 == 0))
 				{
 					m_bowls[index]++;

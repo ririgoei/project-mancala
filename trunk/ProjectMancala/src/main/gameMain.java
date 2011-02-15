@@ -93,6 +93,7 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 //			g.fillOval(375, 110, 75, 75);
 //			g.fillOval(450, 110, 75, 75);
 			g.setColor(Color.black);
+			
 			for(int i=0; i < game.getGameSize(); i++)
 			{
 				g.drawString(game.getBowl(i), game.getBowlLocationX(i),game.getBowlLocationY(i));

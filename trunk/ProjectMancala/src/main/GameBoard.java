@@ -209,7 +209,7 @@ public class GameBoard {
 		// prevent player from stealing from himself
 		if (((nextBowl > 6 && currentPlayer == 1) || (nextBowl < 6 && currentPlayer == 2)))
 			steal = false;
-		
+
 		// prevent player from getting an extra when landing in opposing pool
 		if (((nextBowl == 6 && currentPlayer == 2) || (nextBowl == 13 && currentPlayer == 1)))
 			extraTurn = false;
@@ -312,7 +312,7 @@ public class GameBoard {
 		}
 
 		running = !checkGameOverCondition();
-		// AIPlayer();
+		ArtificalInteligence.update(m_bowls);
 		// if(currentPlayer ==2) AIMove(11);
 	}
 
@@ -338,6 +338,9 @@ public class GameBoard {
 				gameState = "Distributing";
 				initiateDistributionInstance(getSelectron());
 			}
+			break;
+		case 'I':
+			ArtificalInteligence.displayArrays();
 			break;
 		}
 	}

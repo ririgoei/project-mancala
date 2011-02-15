@@ -31,18 +31,14 @@ import javax.swing.JPanel;
 
 
 	@SuppressWarnings("serial")
-public class gameMain extends JPanel implements MouseListener, KeyListener
+public class gameMain extends JPanel implements MouseListener, KeyListener, Runnable
 {
 		XY m_point = new XY();
 		/** whether or not the game is running */
 		/** width/height of the map in terms of columns and rows */
 		XY m_size = new XY();
-		XY[] m_bowlLocations = new XY[14];
 		GameBoard game;
 		
-
-
-		XY m_tileSize = new XY();
 		int m_input;
 		
 		@SuppressWarnings("unused")
@@ -62,50 +58,73 @@ public class gameMain extends JPanel implements MouseListener, KeyListener
 			
 		}
 		
-		public void paint(Graphics g)
+		public void paintComponent(Graphics g)
 		{
+			super.paintComponent(g);
 			drawBoard(g);
 		}
 		
 		//Place holder board.
 		public void drawBoard(Graphics g)
 		{
-			g.drawLine(0, 0, 0 + 600, 0);
-			g.drawLine(0, 0, 0, 200);
-			g.drawLine(600, 0, 600, 200);
-			g.drawLine(0, 200, 600, 200);
-			g.setColor(Color.blue);
-			//Two pools. Top - Player 2, Bottom - Player 1
-			g.fillOval(5, 30, 75, 125);
-			g.fillOval(520, 30, 75, 125);
-			//First player pots.
-			g.fillOval(75, 10, 75, 75);
-			g.fillOval(150, 10, 75, 75);
-			g.fillOval(225, 10, 75, 75);
-			g.fillOval(300, 10, 75, 75);
-			g.fillOval(375, 10, 75, 75);
-			g.fillOval(450, 10, 75, 75);
-			//Second player pots.
-			g.fillOval(75, 110, 75, 75);
-			g.fillOval(150, 110, 75, 75);
-			g.fillOval(225, 110, 75, 75);
-			g.fillOval(300, 110, 75, 75);
-			g.fillOval(375, 110, 75, 75);
-			g.fillOval(450, 110, 75, 75);
+//			g.drawLine(0, 0, 0 + 600, 0);
+//			g.drawLine(0, 0, 0, 200);
+//			g.drawLine(600, 0, 600, 200);
+//			g.drawLine(0, 200, 600, 200);
+//			g.setColor(Color.blue);
+//			//Two pools. Top - Player 2, Bottom - Player 1
+//			g.fillOval(5, 30, 75, 125);
+//			g.fillOval(520, 30, 75, 125);
+//			//First player pots.
+//			g.fillOval(75, 10, 75, 75);
+//			g.fillOval(150, 10, 75, 75);
+//			g.fillOval(225, 10, 75, 75);
+//			g.fillOval(300, 10, 75, 75);
+//			g.fillOval(375, 10, 75, 75);
+//			g.fillOval(450, 10, 75, 75);
+//			//Second player pots.
+//			g.fillOval(75, 110, 75, 75);
+//			g.fillOval(150, 110, 75, 75);
+//			g.fillOval(225, 110, 75, 75);
+//			g.fillOval(300, 110, 75, 75);
+//			g.fillOval(375, 110, 75, 75);
+//			g.fillOval(450, 110, 75, 75);
 			g.setColor(Color.black);
+			for(int i=0; i < game.getGameSize(); i++)
+			{
+				g.drawString(game.getBowl(i), game.getBowlLocationX(i),game.getBowlLocationY(i));
+			}
 		}
 		
 		public gameMain()
 		{
-			// initialize all XY locations
-			for(int i =0; i < m_bowlLocations.length; i++)
-			{
-				m_bowlLocations[i] = new XY();
-			}
+//			m_tileSize.set(60, 60);
+//			// initialize all XY locations for bowls
+//			for(int i =0; i < m_bowlLocations.length; i++){
+//				m_bowlLocations[i] = new XY();
+//			}
+//			int x = m_tileSize.getX()*2;
+//			int y = m_tileSize.getY();
+//			for(int i = 12; i > 6; i--){
+//				m_bowlLocations[i].set(x, y);
+//				x += m_tileSize.getX();
+//			}
+//			x = m_tileSize.getX()*2;
+//			y = m_tileSize.getX()*3;
+//			for(int i = 0; i < 6; i++){
+//				m_bowlLocations[i].set(x, y);
+//				x += m_tileSize.getX();
+//			}
+//			m_bowlLocations[13].set(m_tileSize.getX(), m_tileSize.getY()*2);
+//			m_bowlLocations[6].set(m_tileSize.getX()*8, m_tileSize.getY()*2);
+			
 			addMouseListener(this);
 			addKeyListener(this);
 			game_Running = true;
 			game = new GameBoard(true);
+			m_input = 0;
+			Thread t = new Thread(this);
+			t.start();
 		}
 		
 		public void run()
@@ -120,6 +139,7 @@ public class gameMain extends JPanel implements MouseListener, KeyListener
 				
 				//Update.
 				game.update(m_input);
+				m_input = 0;
 				//Draw function from paint component.
 				repaint();
 				//Throttle code in a Try/Catch.

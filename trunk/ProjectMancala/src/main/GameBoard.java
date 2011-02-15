@@ -1,6 +1,7 @@
 package main;
 
 import java.util.Random;
+import java.awt.Graphics;
 /*TODO:
  * 
  * In this class, we should build the gameboard and all of it's properties. So things we should include in here are:
@@ -11,6 +12,8 @@ import java.util.Random;
  * 
  */
 
+import javax.swing.JPanel;
+
 public class GameBoard {
 	int STANDARDBEADS = 3;
 	private int m_bowls[] = new int[14];
@@ -19,6 +22,8 @@ public class GameBoard {
 	private int selectron, currentPlayer;
 	private boolean running;
 	Random rand = new Random();
+	XY[] m_bowlLocations = new XY[14];
+	XY m_tileSize = new XY();
 
 	// Initializer 
 	public GameBoard(boolean randomize)
@@ -31,6 +36,7 @@ public class GameBoard {
 		{
 			if(randomize) RandomizeBowls();
 			else fillBowls();
+			initializeBowlPoisitions();
 			currentPlayer = 1;
 			selectron = 0;
 			running = true;
@@ -85,6 +91,29 @@ public class GameBoard {
 			}
 		}
 	
+	public void initializeBowlPoisitions()
+	{
+		m_tileSize.set(60, 60);
+		// initialize all XY locations for bowls
+		for(int i =0; i < m_bowlLocations.length; i++){
+			m_bowlLocations[i] = new XY();
+		}
+		int x = m_tileSize.getX()*2;
+		int y = m_tileSize.getY();
+		for(int i = 12; i > 6; i--){
+			m_bowlLocations[i].set(x, y);
+			x += m_tileSize.getX();
+		}
+		x = m_tileSize.getX()*2;
+		y = m_tileSize.getX()*3;
+		for(int i = 0; i < 6; i++){
+			m_bowlLocations[i].set(x, y);
+			x += m_tileSize.getX();
+		}
+		m_bowlLocations[13].set(m_tileSize.getX(), m_tileSize.getY()*2);
+		m_bowlLocations[6].set(m_tileSize.getX()*8, m_tileSize.getY()*2);
+	}
+	
 	// distribute all the beads from one bowl to the rest of the board while it still has any
 	// also checks for steals and extra turns
 	public void distribute(int index)
@@ -100,7 +129,7 @@ public class GameBoard {
 				}
 				m_bowls[index]--;
 				m_bowls[nextBowl]++;
-				draw();
+				//draw();
 				Sleep(500); 
 			}
 			// check if last bowl was empty
@@ -145,57 +174,57 @@ public class GameBoard {
 			else SwitchCurrentPlayer();
 		}
 
-	public void draw()
+	public void draw(Graphics g)
 		{
-			// set y location for printing
-			//int y = 1;
-
-			// set color atributes
-			//setWhiteColor();
-
-			// print player 2 bowls on top
-			int x = 0;
-			for(int i = 12; i > 6; i--)
-			{
-				//gotoxy(x * 4 +5, y);
-				// check for selectron
-				if(selectron == i)
-				{
-					// print selectron
-//					setSelectronColor();
-					System.out.printf("(%2i) ", m_bowls[i]);
-//					setWhiteColor();
-				}
-				else System.out.printf("%2i ", m_bowls[i]);
-				x++;
-			}
-			System.out.printf("/n");
-			
-			// print player pools
-			//y = 2;
-			//gotoxy(1, y);
-			System.out.printf("%2i", m_bowls[13]); // print player 2 pool on the left
-			//gotoxy(29, y);
-			System.out.printf("/t/t");
-			System.out.printf("%2i", m_bowls[6]); // print player 1 pool on the right
-			System.out.printf("/n");
-
-			// print player 1 bowls on the bottom
-			//y = 3;
-			for(int i = 0; i < 6; i++)
-			{
-				//gotoxy(i * 4 +5, y);
-				// check for selectron
-				if(selectron == i)
-				{
-					// print selectron
-					//setSelectronColor();
-					System.out.printf("(%2i) ", m_bowls[i]);
-					//setWhiteColor();
-				}
-				else System.out.printf("%2i ", m_bowls[i]);
-			}
-			System.out.printf("/n");
+//			// set y location for printing
+//			//int y = 1;
+//
+//			// set color atributes
+//			//setWhiteColor();
+//
+//			// print player 2 bowls on top
+//			int x = 0;
+//			for(int i = 12; i > 6; i--)
+//			{
+//				//gotoxy(x * 4 +5, y);
+//				// check for selectron
+//				if(selectron == i)
+//				{
+//					// print selectron
+////					setSelectronColor();
+//					System.out.printf("(%2i) ", m_bowls[i]);
+////					setWhiteColor();
+//				}
+//				else System.out.printf("%2i ", m_bowls[i]);
+//				x++;
+//			}
+//			System.out.printf("/n");
+//			
+//			// print player pools
+//			//y = 2;
+//			//gotoxy(1, y);
+//			System.out.printf("%2i", m_bowls[13]); // print player 2 pool on the left
+//			//gotoxy(29, y);
+//			System.out.printf("/t/t");
+//			System.out.printf("%2i", m_bowls[6]); // print player 1 pool on the right
+//			System.out.printf("/n");
+//
+//			// print player 1 bowls on the bottom
+//			//y = 3;
+//			for(int i = 0; i < 6; i++)
+//			{
+//				//gotoxy(i * 4 +5, y);
+//				// check for selectron
+//				if(selectron == i)
+//				{
+//					// print selectron
+//					//setSelectronColor();
+//					System.out.printf("(%2i) ", m_bowls[i]);
+//					//setWhiteColor();
+//				}
+//				else System.out.printf("%2i ", m_bowls[i]);
+//			}
+//			System.out.printf("/n");
 		}
 //	public void setSelectronColor(void)
 //		{
@@ -282,17 +311,18 @@ public class GameBoard {
 	public void update(int input)
 		{
 			handleInput(input);
-			draw();
+			//draw(g);
 			running = !checkGameOverCondition();
 			AIPlayer();
 			if(currentPlayer ==2) AIMove(11);
 		}
 	public void handleInput(int input)
 		{
+			//System.out.println("input is getting handled");
 			switch(input)
 			{	
-			case 'a': MoveSelectronLeft(); break;
-			case 'd': MoveSelectronRight(); break;
+			case 'A': MoveSelectronLeft(); break;
+			case 'D': MoveSelectronRight(); break;
 			case ' ': if(m_bowls[getSelectron()] != 0) distribute(getSelectron()); break;
 			}
 		}
@@ -495,7 +525,7 @@ public class GameBoard {
 			while(selectron < index)
 			{
 				selectron++;
-				draw();
+				//draw(g);
 				Sleep(500);
 			}
 		}
@@ -508,6 +538,18 @@ public class GameBoard {
 			e.printStackTrace();
 		}
 	}
-	
+	public String getBowl(int index){
+		if(index == selectron)return "("+ m_bowls[index] +")";
+		else return "" + m_bowls[index];
+	}
+	public int getBowlLocationX(int index){
+		return m_bowlLocations[index].getX();
+	}
+	public int getBowlLocationY(int index){
+		return m_bowlLocations[index].getY();
+	}
+	public int getGameSize(){
+		return m_bowls.length;
+	}
 }
 

@@ -16,18 +16,19 @@ import javax.swing.JPanel;
 
 public class GameBoard {
 	private int STANDARDBEADS = 3;
-	private int m_bowls[] = new int[14];
+	private int m_bowls[];
 	private int player1Pool;
 	private int player2Pool;
 	private int selectron, currentPlayer;
 	private boolean running;
 	Random rand = new Random();
-	XY[] m_bowlLocations = new XY[14];
-	XY m_tileSize = new XY();
+	private XY[] m_bowlLocations;
+	private XY m_tileSize;
 	private String gameState;
 	// variables for distributing
 	private int nextBowl, distributionCounter;
 	private boolean steal, extraTurn;
+	private AI ArtificalInteligence;
 	
 
 	// Initializer 
@@ -39,6 +40,9 @@ public class GameBoard {
 		}
 	public void initializeGame(boolean randomize)
 		{
+			m_bowls = new int[14];
+			m_bowlLocations = new XY[14];
+			m_tileSize = new XY();
 			if(randomize) RandomizeBowls();
 			else fillBowls();
 			initializeBowlPoisitions();
@@ -46,6 +50,7 @@ public class GameBoard {
 			selectron = 0;
 			running = true;
 			gameState = "Playing";
+			ArtificalInteligence = new AI(m_bowls);
 		}
 	// Reset Game board
 	public void ResetGameBoard()
@@ -357,160 +362,160 @@ public class GameBoard {
 			else winner = 2;
 			System.out.println("Player " + winner+  "Wins!");
 		}
-	public void AIPlayer()
-		{
-			// check entire board for extra turns
-			boolean ExtraTurnAvailable[] = new boolean[14];
-			for(int i = 0; i < 13; i++)
-			{
-				ExtraTurnAvailable[i] = false;
-			}
-
-			for(int i = 0; i <13; i++)
-			{
-				if(i != 6 && i!= 13)
-				{
-					if(i < 6)
-					{
-						if(m_bowls[i] == 5 - i+1)
-						{
-							ExtraTurnAvailable[i] = true;
-						}
-					}
-					if(i > 6)
-					{
-						if(m_bowls[i] == 12 - i +1)
-						{
-							ExtraTurnAvailable[i] = true;
-						}
-					}
-				}
-			}
-
-
-			// check row for steals
-			boolean StealAvailable[] = new boolean[14];
-			for(int i = 0; i < 13; i++)
-			{
-				StealAvailable[i] = false;
-			}
-			
-			for(int i = 0; i <13; i++)
-			{
-				if(i != 6 && i!= 13)
-				{
-					if(m_bowls[i] == 0 && m_bowls[12-i] > 0)
-					{
-						StealAvailable[i] = true;
-					}
-				}
-			}
-
-			// if a steal is available, check if there are any bowls that can reach it
-			boolean StealReachable[] = new boolean[14];
-			for(int i = 0; i < 13; i++)
-			{
-				StealReachable[i] = false;
-			}
-			for(int i = 0; i < 13; i++)
-			{
-				if(StealAvailable[i] == true)
-				{
-					if(i < 6)
-					{
-						for(int c = i; c >= 0; c--)
-						{
-							if(m_bowls[c] == i - c && m_bowls[c] != 0)
-							{
-								StealReachable[c] = true;
-							}
-						}
-					}
-					if(i > 6)
-					{
-						for(int c = i; c > 6; c--)
-						{
-							if(m_bowls[c] == i - c && m_bowls[c] != 0)
-							{
-								StealReachable[c] = true;
-							}
-						}
-					}
-				}	
-			}
-
-			// find out which bowls set up extra turns
-			boolean ExtraTurnSetupAvailable[] = new boolean[14];
-			for(int i = 0; i < 13; i++)
-			{
-				ExtraTurnSetupAvailable[i] = false;
-			}
-
-			for(int i = 0; i <13; i++)
-			{
-				if(i != 6 && i!= 13)
-				{
-					if(i < 6)
-					{
-						for(int c = 0; c < 6; c++)
-						{
-							if(i < c && m_bowls[c] == 5 - c && m_bowls[i] >= c-i)
-							{
-								ExtraTurnSetupAvailable[i] = true;
-							}
-						}
-						if(i > 6)
-						{
-							for(int c = 7; c < 12; c++)
-							{
-								if(i < c && m_bowls[c] == 12 - c && m_bowls[i] >= c-i)
-								{
-									ExtraTurnSetupAvailable[i] = true;
-								}
-							}
-						}
-					}
-				}
-			}
-			// find out which bowl sets up an optimum steal
-			int P1OptimumSteal, P2OptimumSteal;
-			for(int i = 0; i < 13; i++)
-			{
-
-			}
-			// find out where to ruin steal opportunties
-			// find out where to ruin extra turns
-		
-//			int x = 7;
-//			gotoxy(0, 9);
-//			printf("Extra: ");
-//			gotoxy(0, 10); 
-//			printf("Steal: ");
-//			gotoxy(0, 11); 
-//			printf("Reach: ");
-//			gotoxy(0, 12); 
-//			printf("Setup: ");
+//	public void AIPlayer()
+//		{
+//			// check entire board for extra turns
+//			boolean ExtraTurnAvailable[] = new boolean[14];
 //			for(int i = 0; i < 13; i++)
 //			{
-//				gotoxy(x, 9);
-//
-//				if(i != 6) printf("%i", ExtraTurnAvailable[i]);
-//				gotoxy(x, 10);
-//				if(i != 6) printf("%i", StealAvailable[i]);
-//				gotoxy(x, 11);
-//				if(i != 6) printf("%i", StealReachable[i]);
-//				gotoxy(x, 12);
-//				if(i != 6) printf("%i", ExtraTurnSetupAvailable[i]);
-//				x += 2;
+//				ExtraTurnAvailable[i] = false;
 //			}
-
-			// if there are extra turns or steals available, decide wether a steal or an extra turn is mroe effective
-				// if choosing an extra turn start from bowl closest to pool
-				// if choosing to steal steal from bowl with greatest return value
-			// if neither check if there are bowls that set up extra turns
-				// if there are bowls that set up an extra turn, choose closest one to pool
-			// last resort: get rid of bowl with largest amount of beads
-		}
+//
+//			for(int i = 0; i <13; i++)
+//			{
+//				if(i != 6 && i!= 13)
+//				{
+//					if(i < 6)
+//					{
+//						if(m_bowls[i] == 5 - i+1)
+//						{
+//							ExtraTurnAvailable[i] = true;
+//						}
+//					}
+//					if(i > 6)
+//					{
+//						if(m_bowls[i] == 12 - i +1)
+//						{
+//							ExtraTurnAvailable[i] = true;
+//						}
+//					}
+//				}
+//			}
+//
+//
+//			// check row for steals
+//			boolean StealAvailable[] = new boolean[14];
+//			for(int i = 0; i < 13; i++)
+//			{
+//				StealAvailable[i] = false;
+//			}
+//			
+//			for(int i = 0; i <13; i++)
+//			{
+//				if(i != 6 && i!= 13)
+//				{
+//					if(m_bowls[i] == 0 && m_bowls[12-i] > 0)
+//					{
+//						StealAvailable[i] = true;
+//					}
+//				}
+//			}
+//
+//			// if a steal is available, check if there are any bowls that can reach it
+//			boolean StealReachable[] = new boolean[14];
+//			for(int i = 0; i < 13; i++)
+//			{
+//				StealReachable[i] = false;
+//			}
+//			for(int i = 0; i < 13; i++)
+//			{
+//				if(StealAvailable[i] == true)
+//				{
+//					if(i < 6)
+//					{
+//						for(int c = i; c >= 0; c--)
+//						{
+//							if(m_bowls[c] == i - c && m_bowls[c] != 0)
+//							{
+//								StealReachable[c] = true;
+//							}
+//						}
+//					}
+//					if(i > 6)
+//					{
+//						for(int c = i; c > 6; c--)
+//						{
+//							if(m_bowls[c] == i - c && m_bowls[c] != 0)
+//							{
+//								StealReachable[c] = true;
+//							}
+//						}
+//					}
+//				}	
+//			}
+//
+//			// find out which bowls set up extra turns
+//			boolean ExtraTurnSetupAvailable[] = new boolean[14];
+//			for(int i = 0; i < 13; i++)
+//			{
+//				ExtraTurnSetupAvailable[i] = false;
+//			}
+//
+//			for(int i = 0; i <13; i++)
+//			{
+//				if(i != 6 && i!= 13)
+//				{
+//					if(i < 6)
+//					{
+//						for(int c = 0; c < 6; c++)
+//						{
+//							if(i < c && m_bowls[c] == 5 - c && m_bowls[i] >= c-i)
+//							{
+//								ExtraTurnSetupAvailable[i] = true;
+//							}
+//						}
+//						if(i > 6)
+//						{
+//							for(int c = 7; c < 12; c++)
+//							{
+//								if(i < c && m_bowls[c] == 12 - c && m_bowls[i] >= c-i)
+//								{
+//									ExtraTurnSetupAvailable[i] = true;
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//			// find out which bowl sets up an optimum steal
+//			int P1OptimumSteal, P2OptimumSteal;
+//			for(int i = 0; i < 13; i++)
+//			{
+//
+//			}
+//			// find out where to ruin steal opportunties
+//			// find out where to ruin extra turns
+//		
+////			int x = 7;
+////			gotoxy(0, 9);
+////			printf("Extra: ");
+////			gotoxy(0, 10); 
+////			printf("Steal: ");
+////			gotoxy(0, 11); 
+////			printf("Reach: ");
+////			gotoxy(0, 12); 
+////			printf("Setup: ");
+////			for(int i = 0; i < 13; i++)
+////			{
+////				gotoxy(x, 9);
+////
+////				if(i != 6) printf("%i", ExtraTurnAvailable[i]);
+////				gotoxy(x, 10);
+////				if(i != 6) printf("%i", StealAvailable[i]);
+////				gotoxy(x, 11);
+////				if(i != 6) printf("%i", StealReachable[i]);
+////				gotoxy(x, 12);
+////				if(i != 6) printf("%i", ExtraTurnSetupAvailable[i]);
+////				x += 2;
+////			}
+//
+//			// if there are extra turns or steals available, decide wether a steal or an extra turn is mroe effective
+//				// if choosing an extra turn start from bowl closest to pool
+//				// if choosing to steal steal from bowl with greatest return value
+//			// if neither check if there are bowls that set up extra turns
+//				// if there are bowls that set up an extra turn, choose closest one to pool
+//			// last resort: get rid of bowl with largest amount of beads
+//		}
 	public void AIMove(int index)
 		{
 			while(selectron < index)

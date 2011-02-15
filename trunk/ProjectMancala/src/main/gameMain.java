@@ -2,7 +2,9 @@ package main;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -40,6 +42,7 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 		GameBoard game;
 		
 		int m_input;
+		Image m_MancalaBoard;
 		
 		@SuppressWarnings("unused")
 		private boolean game_Running;
@@ -94,6 +97,7 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 			{
 				g.drawString(game.getBowl(i), game.getBowlLocationX(i),game.getBowlLocationY(i));
 			}
+			g.drawImage(m_MancalaBoard, 10, 10, null);
 		}
 		
 		public gameMain()
@@ -105,6 +109,7 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 			m_input = 0;
 			Thread t = new Thread(this);
 			t.start();
+			m_MancalaBoard = Toolkit.getDefaultToolkit().createImage("mancalaBoard.png");
 		}
 		
 		public void run()

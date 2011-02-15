@@ -37,7 +37,7 @@ public class GameBoard {
 		player2Pool = 13;
 	}
 
-	public void initializeGame(boolean randomize) {
+	private void initializeGame(boolean randomize) {
 		m_bowls = new int[14];
 		m_bowlLocations = new XY[14];
 		m_tileSize = new XY();
@@ -64,7 +64,7 @@ public class GameBoard {
 	}
 
 	// Fills all bowls with a standard number of beads
-	public void fillBowls() {
+	private void fillBowls() {
 		for (int i = 0; i < 14; i++) {
 			if ((i + 1) % 7 == 0)
 				m_bowls[i] = 0;
@@ -76,7 +76,7 @@ public class GameBoard {
 
 	// Fill all bowls with at least one bead, and add to them randomly to fill
 	// all bowls with random beads
-	public void RandomizeBowls() {
+	private void RandomizeBowls() {
 		// keep track of total beads
 		int totalBeads = 0;
 		// fill all bowls with at least one bead
@@ -99,7 +99,7 @@ public class GameBoard {
 		}
 	}
 
-	public void initializeBowlPoisitions() {
+	private void initializeBowlPoisitions() {
 		m_tileSize.set(60, 60);
 		// initialize all XY locations for bowls
 		for (int i = 0; i < m_bowlLocations.length; i++) {
@@ -124,7 +124,8 @@ public class GameBoard {
 	// distribute all the beads from one bowl to the rest of the board while it
 	// still has any
 	// also checks for steals and extra turns
-	public void distribute(int index) {
+	// METHOD DEPRECIATED
+	private void distribute(int index) {
 		// distribute beads through out the board
 		int nextBowl = index;
 		for (int i = m_bowls[index]; i > 0; i--) {
@@ -136,43 +137,9 @@ public class GameBoard {
 			m_bowls[nextBowl]++;
 			gameState = "Disributing";
 		}
-		// check if last bowl was empty
-		boolean steal = false;
-		boolean extraTurn = false;
-		if (nextBowl == 6 || nextBowl == 13)
-			extraTurn = true;
-		if (m_bowls[nextBowl] == 1 && nextBowl != 6 && nextBowl != 13)
-			steal = true;
-
-		// prevent player from stealing from himself
-		if (((nextBowl > 6 && currentPlayer == 1) || (nextBowl < 6 && currentPlayer == 2)))
-			steal = false;
-
-		// if true find opposite bowl and steal pieces in that bowl, and reward
-		// them to the current player
-		if (steal) {
-			int oppositeBowl = 12 - nextBowl;
-			if (m_bowls[oppositeBowl] != 0) {
-				if (oppositeBowl < 6) {
-					m_bowls[13] += m_bowls[oppositeBowl];
-				} else if (oppositeBowl > 6) {
-					m_bowls[6] += m_bowls[oppositeBowl];
-				}
-				m_bowls[oppositeBowl] = 0;
-				System.out.println("STEAL!");
-			}
-		}
-		if (extraTurn) {
-			System.out.println("Extra Turn!");
-		} else {
-			SwitchCurrentPlayer();
-			gameState = "Playing";
-			System.out.println("Players switched");
-		}
-
 	}
 
-	public boolean distributeOnce(int index) {
+	private boolean distributeOnce(int index) {
 		nextBowl++;
 		// if the next bowl is greater than the size of the array, then loop to
 		// the beginning of the array
@@ -192,12 +159,12 @@ public class GameBoard {
 		}
 	}
 
-	public void initiateDistributionInstance(int index) {
+	private void initiateDistributionInstance(int index) {
 		nextBowl = index;
 		distributionCounter = m_bowls[index];
 	}
 
-	public void GameLogic() {
+	private void GameLogic() {
 		// check if last bowl was empty
 		steal = false;
 		extraTurn = false;
@@ -239,7 +206,7 @@ public class GameBoard {
 
 	}
 
-	public void MoveSelectronRight() {
+	private void MoveSelectronRight() {
 		if (currentPlayer == 1) {
 			if (selectron < 5)
 				selectron++;
@@ -249,7 +216,7 @@ public class GameBoard {
 		}
 	}
 
-	public void MoveSelectronLeft() {
+	private void MoveSelectronLeft() {
 		if (currentPlayer == 1) {
 			if (selectron > 0)
 				selectron--;
@@ -259,7 +226,7 @@ public class GameBoard {
 		}
 	}
 
-	public void SwitchCurrentPlayer() {
+	private void SwitchCurrentPlayer() {
 		if (currentPlayer == 1) {
 			currentPlayer = 2;
 			selectron = 7;
@@ -273,7 +240,7 @@ public class GameBoard {
 		return selectron;
 	}
 
-	public boolean checkGameOverCondition() {
+	private boolean checkGameOverCondition() {
 		// check player 1
 		boolean GameOver = true, flag = false;
 		for (int i = 0; i < 6; i++) {
@@ -316,7 +283,7 @@ public class GameBoard {
 		// if(currentPlayer ==2) AIMove(11);
 	}
 
-	public void handleDistribution(int index) {
+	private void handleDistribution(int index) {
 		boolean flag;
 		System.out.println(gameState);
 		flag = distributeOnce(index);
@@ -358,7 +325,7 @@ public class GameBoard {
 		}
 	}
 
-	public void AIMove(int index) {
+	private void AIMove(int index) {
 		while (selectron < index) {
 			selectron++;
 			// draw(g);

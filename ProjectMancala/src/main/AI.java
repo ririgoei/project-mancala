@@ -47,6 +47,32 @@ public class AI {
 	public void Evaluate() {
 		// check entire board for extra turns
 		initializeArrays();
+		// check entire board for extra turns
+		EvaluateExtraTurns();
+		// check row for steals
+		EvaluateSteals();
+		// if a steal is available, check if there are any bowls that can reach it
+		EvaluateReachableSteals();
+		// find out which bowls set up extra turns
+		EvaluateExtraTurnSetupOpportunities();
+		// find out which bowl sets up an optimum steal
+		for (int i = 0; i < 13; i++) {
+
+		}
+		// find out where to ruin steal opportunities
+		// find out where to ruin extra turns
+
+
+		// if there are extra turns or steals available, decide whether a steal
+		// or an extra turn is more effective
+		// if choosing an extra turn start from bowl closest to pool
+		// if choosing to steal steal from bowl with greatest return value
+		// if neither check if there are bowls that set up extra turns
+		// if there are bowls that set up an extra turn, choose closest one to
+		// pool
+		// last resort: get rid of bowl with largest amount of beads
+	}
+	private void EvaluateExtraTurns(){
 		for (int i = 0; i < 13; i++) {
 			if (i != 6 && i != 13) {
 				if (i < 6) {
@@ -61,10 +87,8 @@ public class AI {
 				}
 			}
 		}
-
-		// check row for steals
-
-
+	}
+	private void EvaluateSteals(){
 		for (int i = 0; i < 13; i++) {
 			if (i != 6 && i != 13) {
 				if (GameBoard[i] == 0 && GameBoard[12 - i] > 0) {
@@ -72,10 +96,8 @@ public class AI {
 				}
 			}
 		}
-
-		// if a steal is available, check if there are any bowls that can reach
-		// it
-
+	}
+	private void EvaluateReachableSteals(){
 		for (int i = 0; i < 13; i++) {
 			if (StealAvailable[i] == true) {
 				if (i < 6) {
@@ -94,10 +116,9 @@ public class AI {
 				}
 			}
 		}
-
-		// find out which bowls set up extra turns
-
-
+	}
+	
+	private void EvaluateExtraTurnSetupOpportunities(){
 		for (int i = 0; i < 13; i++) {
 			if (i != 6 && i != 13) {
 				if (i < 6) {
@@ -117,22 +138,6 @@ public class AI {
 				}
 			}
 		}
-		// find out which bowl sets up an optimum steal
-		for (int i = 0; i < 13; i++) {
-
-		}
-		// find out where to ruin steal opportunities
-		// find out where to ruin extra turns
-
-
-		// if there are extra turns or steals available, decide whether a steal
-		// or an extra turn is more effective
-		// if choosing an extra turn start from bowl closest to pool
-		// if choosing to steal steal from bowl with greatest return value
-		// if neither check if there are bowls that set up extra turns
-		// if there are bowls that set up an extra turn, choose closest one to
-		// pool
-		// last resort: get rid of bowl with largest amount of beads
 	}
 
 	public void makeDecision(){
@@ -144,31 +149,21 @@ public class AI {
 	public void displayArrays(){
 		// Display Extra Turns Available
 		System.out.print("Extra Turns Available: 		");
-		displayPlayer1Options(ExtraTurnAvailable);
-		System.out.print(" ");
-		displayPlayer2Options(ExtraTurnAvailable);
-		System.out.println();
+		displayPlayerOptions(ExtraTurnAvailable);
 		
 		// Display Steals Available
 		System.out.print("Steals Available: 		");
-		displayPlayer1Options(StealAvailable);
-		System.out.print(" ");
-		displayPlayer2Options(StealAvailable);
-		System.out.println();
+		displayPlayerOptions(StealAvailable);
+
 		
 		// Display Steal Opportunities Reachable
 		System.out.print("Steal Opportunities Reachable:  ");
-		displayPlayer1Options(StealReachable);
-		System.out.print(" ");
-		displayPlayer2Options(StealReachable);
-		System.out.println();
+		displayPlayerOptions(StealReachable);
+
 		
 		// Display Extra Turn Setup Opportunities
 		System.out.print("Extra Turn Setup Opportunities: ");
-		displayPlayer1Options(ExtraTurnSetupAvailable);
-		System.out.print(" ");
-		displayPlayer2Options(ExtraTurnSetupAvailable);
-		System.out.println();
+		displayPlayerOptions(ExtraTurnSetupAvailable);
 	}
 	public void displayPlayer1Options(boolean a_array[]){
 		for(int i = 0; i < 6; i++){
@@ -184,5 +179,10 @@ public class AI {
 			System.out.print(output + " ");
 		}
 	}
-	
+	public void displayPlayerOptions(boolean a_array[]){
+		displayPlayer1Options(a_array);
+		System.out.print(" ");
+		displayPlayer2Options(a_array);
+		System.out.println();
+	}
 }

@@ -97,27 +97,7 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 		}
 		
 		public gameMain()
-		{
-//			m_tileSize.set(60, 60);
-//			// initialize all XY locations for bowls
-//			for(int i =0; i < m_bowlLocations.length; i++){
-//				m_bowlLocations[i] = new XY();
-//			}
-//			int x = m_tileSize.getX()*2;
-//			int y = m_tileSize.getY();
-//			for(int i = 12; i > 6; i--){
-//				m_bowlLocations[i].set(x, y);
-//				x += m_tileSize.getX();
-//			}
-//			x = m_tileSize.getX()*2;
-//			y = m_tileSize.getX()*3;
-//			for(int i = 0; i < 6; i++){
-//				m_bowlLocations[i].set(x, y);
-//				x += m_tileSize.getX();
-//			}
-//			m_bowlLocations[13].set(m_tileSize.getX(), m_tileSize.getY()*2);
-//			m_bowlLocations[6].set(m_tileSize.getX()*8, m_tileSize.getY()*2);
-			
+		{	
 			addMouseListener(this);
 			addKeyListener(this);
 			game_Running = true;
@@ -140,13 +120,15 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 				//Update.
 				game.update(m_input);
 				m_input = 0;
+				game_Running = game.isRunning();
 				//Draw function from paint component.
 				repaint();
 				//Throttle code in a Try/Catch.
-				try{Thread.sleep(100);}catch(Exception e){}
+				Sleep(100);
 				
 				//Input, going to be using mouse, working with that soon.
 			}
+			game.DisplayWinner();
 		}
 				
 		//All of the input functions. Keyboard input, and Mouse input.
@@ -160,6 +142,17 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 		public void mouseExited(MouseEvent arg0) {}
 		public void mousePressed(MouseEvent arg0) {}
 		public void mouseReleased(MouseEvent arg0) {}
+		
+		//Sleep method for Throttle code in a Try/Catch.
+		public void Sleep(long SleepTime)
+		{
+			try {
+				Thread.sleep(SleepTime);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 }
 

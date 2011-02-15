@@ -15,7 +15,7 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 public class GameBoard {
-	int STANDARDBEADS = 3;
+	private int STANDARDBEADS = 3;
 	private int m_bowls[] = new int[14];
 	private int player1Pool;
 	private int player2Pool;
@@ -24,6 +24,11 @@ public class GameBoard {
 	Random rand = new Random();
 	XY[] m_bowlLocations = new XY[14];
 	XY m_tileSize = new XY();
+	private String gameState;
+	// variables for distributing
+	private int nextBowl, distributionCounter;
+	private boolean steal, extraTurn;
+	
 
 	// Initializer 
 	public GameBoard(boolean randomize)
@@ -40,6 +45,7 @@ public class GameBoard {
 			currentPlayer = 1;
 			selectron = 0;
 			running = true;
+			gameState = "Playing";
 		}
 	// Reset Game board
 	public void ResetGameBoard()
@@ -130,12 +136,13 @@ public class GameBoard {
 				m_bowls[index]--;
 				m_bowls[nextBowl]++;
 				//draw();
-				Sleep(500); 
+				gameState = "Disributing";
+				//Sleep(500); 
 			}
 			// check if last bowl was empty
 			boolean steal = false;
-			boolean GoAgain = false;
-			if(nextBowl == 6 || nextBowl == 13) GoAgain = true;
+			boolean extraTurn = false;
+			if(nextBowl == 6 || nextBowl == 13) extraTurn = true;
 			if(m_bowls[nextBowl] == 1 && nextBowl != 6 && nextBowl!= 13) steal = true;
 			
 			// prevent player from stealing from himself
@@ -158,89 +165,91 @@ public class GameBoard {
 					m_bowls[oppositeBowl] = 0;
 					//gotoxy(1, 5);
 					System.out.println("STEAL!");
-					Sleep(1500); 
+					//Sleep(1500); 
 					//gotoxy(1, 5);
 					//clearPrompts();
 				}
 			}
-			if (GoAgain) 				
-			{
+			if (extraTurn){
 				//gotoxy(1, 5);
 				System.out.println("Extra Turn!");
-				Sleep(1500);
+				//Sleep(1500);
 				//gotoxy(1, 5);
 				//clearPrompts();
 			}
-			else SwitchCurrentPlayer();
+			else {
+				SwitchCurrentPlayer();
+				gameState = "Playing";
+				System.out.println("Players switched");
+			}
+			
 		}
+	
+	public boolean distributeOnce(int index)
+	{
+		nextBowl++;
+		// if the next bowl is greater than the size of the array, then loop to the beginning of the array 
+		if (nextBowl >= getGameSize()) {
+			nextBowl = 0;
+		}
+		m_bowls[index]--;
+		m_bowls[nextBowl]++;
+		distributionCounter--;
 
-	public void draw(Graphics g)
-		{
-//			// set y location for printing
-//			//int y = 1;
-//
-//			// set color atributes
-//			//setWhiteColor();
-//
-//			// print player 2 bowls on top
-//			int x = 0;
-//			for(int i = 12; i > 6; i--)
-//			{
-//				//gotoxy(x * 4 +5, y);
-//				// check for selectron
-//				if(selectron == i)
-//				{
-//					// print selectron
-////					setSelectronColor();
-//					System.out.printf("(%2i) ", m_bowls[i]);
-////					setWhiteColor();
-//				}
-//				else System.out.printf("%2i ", m_bowls[i]);
-//				x++;
-//			}
-//			System.out.printf("/n");
-//			
-//			// print player pools
-//			//y = 2;
-//			//gotoxy(1, y);
-//			System.out.printf("%2i", m_bowls[13]); // print player 2 pool on the left
-//			//gotoxy(29, y);
-//			System.out.printf("/t/t");
-//			System.out.printf("%2i", m_bowls[6]); // print player 1 pool on the right
-//			System.out.printf("/n");
-//
-//			// print player 1 bowls on the bottom
-//			//y = 3;
-//			for(int i = 0; i < 6; i++)
-//			{
-//				//gotoxy(i * 4 +5, y);
-//				// check for selectron
-//				if(selectron == i)
-//				{
-//					// print selectron
-//					//setSelectronColor();
-//					System.out.printf("(%2i) ", m_bowls[i]);
-//					//setWhiteColor();
-//				}
-//				else System.out.printf("%2i ", m_bowls[i]);
-//			}
-//			System.out.printf("/n");
+		if(distributionCounter <= 0){
+			gameState = "Playing";
+			return true;
 		}
-//	public void setSelectronColor(void)
-//		{
-//			int color_attribute = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-//			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),color_attribute);
-//		}
-//	public void setGreenColor(void)
-//		{
-//			int color_attribute = 3;
-//			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),color_attribute);
-//		}
-//	public void setWhiteColor(void)
-//		{
-//			int color_attribute = FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY;
-//			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),color_attribute);
-//		}
+		else{
+			gameState = "Distributing";
+			return false;
+		}
+	}
+	public void initiateDistributionInstance(int index)
+	{
+		nextBowl = index;
+		distributionCounter = m_bowls[index];
+	}
+	public void GameLogic(){
+		// check if last bowl was empty
+		steal = false;
+		extraTurn = false;
+		if(nextBowl == 6 || nextBowl == 13) extraTurn = true;
+		if(m_bowls[nextBowl] == 1 && nextBowl != 6 && nextBowl!= 13) steal = true;
+		
+		// prevent player from stealing from himself
+		if(((nextBowl > 6 && currentPlayer == 1) || (nextBowl < 6 && currentPlayer == 2))) steal = false;
+
+		// if true find opposite bowl and steal pieces in that bowl, and reward them to the current player
+		if (steal)
+		{
+			int oppositeBowl = 12 - nextBowl;
+			if(m_bowls[oppositeBowl] != 0)
+			{
+				if(oppositeBowl < 6)
+				{
+					m_bowls[13] += m_bowls[oppositeBowl];
+				}
+				else if (oppositeBowl > 6)
+				{
+					m_bowls[6] += m_bowls[oppositeBowl];
+				}				
+				m_bowls[oppositeBowl] = 0;
+				System.out.println("STEAL!");
+
+			}
+		}
+		if (extraTurn){
+			System.out.println("Extra Turn!");
+		}
+		else {
+			SwitchCurrentPlayer();
+			gameState = "Playing";
+			System.out.println("Players switched");
+		}
+		
+	}
+
 	public void MoveSelectronRight()
 		{
 			if(currentPlayer == 1) 
@@ -286,7 +295,7 @@ public class GameBoard {
 			{
 				if(m_bowls[i] != 0)
 				{
-					flag = true; // if an bowls contain a number that is not 0 return false
+					flag = true; // if any bowls contain a number that is not 0 return false
 				}
 				if(flag) GameOver = false;
 			}
@@ -310,62 +319,44 @@ public class GameBoard {
 	
 	public void update(int input)
 		{
+			if(gameState == "Playing"){
 			handleInput(input);
-			//draw(g);
+			}
+			else if(gameState == "Distributing"){
+				handleDistribution(getSelectron());
+			}
+			
 			running = !checkGameOverCondition();
-			AIPlayer();
-			if(currentPlayer ==2) AIMove(11);
+			//AIPlayer();
+			//if(currentPlayer ==2) AIMove(11);
 		}
+	public void handleDistribution(int index)
+	{
+		boolean flag;
+		System.out.println(gameState);
+		flag = distributeOnce(index);
+		if(flag)GameLogic();
+		Sleep(500);
+	}
 	public void handleInput(int input)
 		{
-			//System.out.println("input is getting handled");
 			switch(input)
 			{	
 			case 'A': MoveSelectronLeft(); break;
 			case 'D': MoveSelectronRight(); break;
-			case ' ': if(m_bowls[getSelectron()] != 0) distribute(getSelectron()); break;
+			case ' ': if(m_bowls[getSelectron()] != 0){
+						gameState = "Distributing"; 
+						initiateDistributionInstance(getSelectron());
+						}break;
 			}
 		}
-	public boolean DisplayWinner()
+	public void DisplayWinner()
 		{
 			int winner;
 			if(m_bowls[player1Pool] > m_bowls[player2Pool]) winner = 1;
 			else winner = 2;
-			//gotoxy(1, 5);
-			System.out.printf("Player %i Wins! \n \n", winner);
-			//gotoxy(1, 6);
-			System.out.printf(" Play Again?");		
-
-//			boolean flag = true;
-//			while (flag)
-//			{		
-//				int input = _getch();
-//				input = toupper(input);
-//				flag = false;
-//				switch(input)
-//				{
-//				case 'Y':  clearPrompts(); return true; break;
-//				case 'N':  clearPrompts(); return false; break;
-//				default: gotoxy(1, 7);
-//					printf("Invalid entry");
-//					flag = true;
-//					break;
-//				}
-//			}
-			return true;
+			System.out.println("Player " + winner+  "Wins!");
 		}
-//	public void clearPrompts()
-//		{
-//			for(int y = 5; y <= 8; y++)
-//			{
-//				for(int x = 0; x < 33; x++)
-//				{
-//					gotoxy(x, y);
-//					printf(" ");
-//				}
-//			}
-//			gotoxy(0, 5);
-//		}
 	public void AIPlayer()
 		{
 			// check entire board for extra turns
@@ -550,6 +541,9 @@ public class GameBoard {
 	}
 	public int getGameSize(){
 		return m_bowls.length;
+	}
+	public String getGameState(){
+		return gameState;
 	}
 }
 

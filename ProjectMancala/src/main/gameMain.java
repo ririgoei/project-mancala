@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -44,6 +45,7 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 		Image m_MancalaBoard;
 		
 		private boolean game_Running;
+		Font big = new Font("SansSerif", Font.BOLD, 20);
 
 		//Builds the window YAY!
 		public static void main(String[] args)
@@ -74,25 +76,26 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 			g.drawLine(0, 200, 600, 200);
 			//Two pools. Top - Player 2, Bottom - Player 1
 			g.setColor(Color.red);
-			g.fillOval(20, 60, 75, 100);
+			g.fillOval(30, 60, 75, 100);
 			g.setColor(Color.orange);
 			g.fillOval(450, 60, 75, 100);
 			//First player pots.
 			g.setColor(Color.red);
-			g.fillOval(105, 35, 40, 40);
-			g.fillOval(165, 35, 40, 40);
-			g.fillOval(225, 35, 40, 40);
-			g.fillOval(285, 35, 40, 40);
-			g.fillOval(345, 35, 40, 40);
-			g.fillOval(405, 35, 40, 40);
+			g.fillOval(110, 35, 40, 40);
+			g.fillOval(170, 35, 40, 40);
+			g.fillOval(230, 35, 40, 40);
+			g.fillOval(290, 35, 40, 40);
+			g.fillOval(350, 35, 40, 40);
+			g.fillOval(410, 35, 40, 40);
 			//Second player pots.
 			g.setColor(Color.orange);
-			g.fillOval(105, 155, 40, 40);
-			g.fillOval(165, 155, 40, 40);
-			g.fillOval(225, 155, 40, 40);
-			g.fillOval(285, 155, 40, 40);
-			g.fillOval(345, 155, 40, 40);
-			g.fillOval(405, 155, 40, 40);
+			g.fillOval(110, 155, 40, 40);
+			g.fillOval(170, 155, 40, 40);
+			g.fillOval(230, 155, 40, 40);
+			g.fillOval(290, 155, 40, 40);
+			g.fillOval(350, 155, 40, 40);
+			g.fillOval(410, 155, 40, 40);
+			g.setFont(big);
 			g.setColor(Color.black);
 			
 			
@@ -108,7 +111,7 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 			addMouseListener(this);
 			addKeyListener(this);
 			game_Running = true;
-			game = new GameBoard(true, 2);
+			game = new GameBoard(true, 1);
 			m_input = 0;
 			Thread t = new Thread(this);
 			t.start();

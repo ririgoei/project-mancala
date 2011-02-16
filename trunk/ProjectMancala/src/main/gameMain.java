@@ -3,7 +3,6 @@ package main;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -116,10 +115,10 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 			m_MancalaBoard = Toolkit.getDefaultToolkit().createImage("mancalaBoard.png");
 		}
 		
+		@SuppressWarnings("unused")
 		public void run()
 		{
 			
-			@SuppressWarnings("unused")
 			long now, then = System.currentTimeMillis(), passed;
 			while(game_Running)
 			{

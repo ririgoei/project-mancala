@@ -106,7 +106,7 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 			addMouseListener(this);
 			addKeyListener(this);
 			game_Running = true;
-			game = new GameBoard(true);
+			game = new GameBoard(true, 2);
 			m_input = 0;
 			Thread t = new Thread(this);
 			t.start();
@@ -115,6 +115,7 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 		
 		public void run()
 		{
+			
 			@SuppressWarnings("unused")
 			long now, then = System.currentTimeMillis(), passed;
 			while(game_Running)

@@ -30,10 +30,11 @@ public class GameBoard {
 	int GameMode;
 
 	// Initializer
-	public GameBoard(boolean randomize) {
+	public GameBoard(boolean randomize, int Mode) {
 		initializeGame(randomize);
 		player1Pool = 6;
 		player2Pool = 13;
+		GameMode = Mode;
 	}
 
 	private void initializeGame(boolean randomize) {
@@ -50,7 +51,7 @@ public class GameBoard {
 		running = true;
 		gameState = "Playing";
 		ArtificalInteligence = new AI(m_bowls);
-		GameMode = 2;
+		GameMode = 0;
 	}
 
 	// Reset Game board
@@ -121,23 +122,6 @@ public class GameBoard {
 		m_bowlLocations[6].set(m_tileSize.getX() * 8, m_tileSize.getY() * 2);
 	}
 
-	// distribute all the beads from one bowl to the rest of the board while it
-	// still has any
-	// also checks for steals and extra turns
-	// METHOD DEPRECIATED
-	private void distribute(int index) {
-		// distribute beads through out the board
-		int nextBowl = index;
-		for (int i = m_bowls[index]; i > 0; i--) {
-			nextBowl++;
-			if (nextBowl >= 14) {
-				nextBowl = 0;
-			}
-			m_bowls[index]--;
-			m_bowls[nextBowl]++;
-			gameState = "Disributing";
-		}
-	}
 
 	private boolean distributeOnce(int index) {
 		nextBowl++;
@@ -233,14 +217,6 @@ public class GameBoard {
 		} else if (currentPlayer == 2) {
 			currentPlayer = 1;
 			selectron = 0;
-		}
-	}
-	
-	private void ResetSelectron(){
-		if (currentPlayer == 1) {
-			selectron = 0;
-		} else if (currentPlayer == 2) {
-			selectron = 7;
 		}
 	}
 

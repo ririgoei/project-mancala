@@ -44,7 +44,6 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 		int m_input;
 		Image m_MancalaBoard;
 		
-		@SuppressWarnings("unused")
 		private boolean game_Running;
 
 		//Builds the window YAY!
@@ -93,6 +92,7 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 //			g.fillOval(375, 110, 75, 75);
 //			g.fillOval(450, 110, 75, 75);
 			g.setColor(Color.black);
+			
 			
 			for(int i=0; i < game.getGameSize(); i++)
 			{

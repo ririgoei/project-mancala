@@ -69,28 +69,30 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 		//Place holder board.
 		public void drawBoard(Graphics g)
 		{
-//			g.drawLine(0, 0, 0 + 600, 0);
-//			g.drawLine(0, 0, 0, 200);
-//			g.drawLine(600, 0, 600, 200);
-//			g.drawLine(0, 200, 600, 200);
-//			g.setColor(Color.blue);
-//			//Two pools. Top - Player 2, Bottom - Player 1
-//			g.fillOval(5, 30, 75, 125);
-//			g.fillOval(520, 30, 75, 125);
-//			//First player pots.
-//			g.fillOval(75, 10, 75, 75);
-//			g.fillOval(150, 10, 75, 75);
-//			g.fillOval(225, 10, 75, 75);
-//			g.fillOval(300, 10, 75, 75);
-//			g.fillOval(375, 10, 75, 75);
-//			g.fillOval(450, 10, 75, 75);
-//			//Second player pots.
-//			g.fillOval(75, 110, 75, 75);
-//			g.fillOval(150, 110, 75, 75);
-//			g.fillOval(225, 110, 75, 75);
-//			g.fillOval(300, 110, 75, 75);
-//			g.fillOval(375, 110, 75, 75);
-//			g.fillOval(450, 110, 75, 75);
+			g.drawLine(0, 0, 0 + 600, 0);
+			g.drawLine(0, 0, 0, 200);
+			g.drawLine(600, 0, 600, 200);
+			g.drawLine(0, 200, 600, 200);
+			g.setColor(Color.blue);
+			//Two pools. Top - Player 2, Bottom - Player 1
+			g.fillOval(20, 60, 75, 100);
+			g.fillOval(450, 60, 75, 100);
+			//First player pots.
+			g.setColor(Color.red);
+			g.fillOval(105, 35, 40, 40);
+			g.fillOval(165, 35, 40, 40);
+			g.fillOval(225, 35, 40, 40);
+			g.fillOval(285, 35, 40, 40);
+			g.fillOval(345, 35, 40, 40);
+			g.fillOval(405, 35, 40, 40);
+			//Second player pots.
+			g.setColor(Color.orange);
+			g.fillOval(105, 155, 40, 40);
+			g.fillOval(165, 155, 40, 40);
+			g.fillOval(225, 155, 40, 40);
+			g.fillOval(285, 155, 40, 40);
+			g.fillOval(345, 155, 40, 40);
+			g.fillOval(405, 155, 40, 40);
 			g.setColor(Color.black);
 			
 			

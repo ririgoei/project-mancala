@@ -85,8 +85,8 @@ public class GameBoard {
 			if ((i + 1) % 7 == 0)
 				m_bowls[i] = 0;
 			else {
-				m_bowls[i] = 1;
-				totalBeads++;
+				m_bowls[i] = 2;
+				totalBeads+=2;
 			}
 		}
 		// fill random bowls with more beads

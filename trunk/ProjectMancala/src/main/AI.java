@@ -59,8 +59,7 @@ public class AI {
 		EvaluateExtraTurns();
 		// check row for steals
 		EvaluateSteals();
-		// if a steal is available, check if there are any bowls that can reach
-		// it
+		// if a steal is available, check if there are any bowls that can reach it
 		EvaluateReachableSteals();
 		// find out which bowls set up extra turns
 		EvaluateExtraTurnSetupOpportunities();

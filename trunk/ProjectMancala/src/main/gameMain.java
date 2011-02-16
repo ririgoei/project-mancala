@@ -73,9 +73,10 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 			g.drawLine(0, 0, 0, 200);
 			g.drawLine(600, 0, 600, 200);
 			g.drawLine(0, 200, 600, 200);
-			g.setColor(Color.blue);
 			//Two pools. Top - Player 2, Bottom - Player 1
+			g.setColor(Color.red);
 			g.fillOval(20, 60, 75, 100);
+			g.setColor(Color.orange);
 			g.fillOval(450, 60, 75, 100);
 			//First player pots.
 			g.setColor(Color.red);

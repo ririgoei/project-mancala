@@ -70,15 +70,6 @@ public class AI {
 		EvaluateStealRuinOpportunities();
 		// find out where to ruin extra turns
 		EvaluateExtraTurnRuinOpportunities();
-
-		// if there are extra turns or steals available, decide whether a steal
-		// or an extra turn is more effective
-		// if choosing an extra turn start from bowl closest to pool
-		// if choosing to steal steal from bowl with greatest return value
-		// if neither check if there are bowls that set up extra turns
-		// if there are bowls that set up an extra turn, choose closest one to
-		// pool
-		// last resort: get rid of bowl with largest amount of beads
 	}
 
 	private void EvaluateExtraTurns() {
@@ -198,17 +189,69 @@ public class AI {
 
 	private void makeDecision() {
 		for (int i = 0; i < 13; i++) {
-			// add 4 kudos if extra turns and steals are possible
-			if (ExtraTurnAvailable[i])
-				DecisionPriority[i] += 4;
-			if (StealReachable[i])
-				DecisionPriority[i] += 3;
-
 			if (ExtraTurnSetupAvailable[i])
 				DecisionPriority[i]++;
 			if (LargestBowl[i])
 				DecisionPriority[i]++;
 		}
+		
+		// prioritize extra turns
+		int counter1 = 0, counter2 = 0;
+		for (int i = 0; i < 13; i++) {
+			if (i < 6) {
+				if (ExtraTurnAvailable[i])
+					counter1++;
+			}
+			if(i > 6){
+				if(ExtraTurnAvailable[i])
+					counter2++;
+			}
+		}
+		if(counter1 < 4) counter1 = 4;
+		if(counter2 < 4) counter2 = 4;
+		
+		for (int i = 5; i >= 0; i--){
+			if(ExtraTurnAvailable[i]){
+				DecisionPriority[i] = counter1;
+				counter1--;
+			}
+		}
+		for(int i = 12; i > 6; i--){
+			if(ExtraTurnAvailable[i]){
+				DecisionPriority[i] = counter2;
+				counter2--;
+			}
+		}
+		
+		// prioritize Steals
+		counter1 = 0;
+		counter2 = 0;
+		for (int i = 0; i < 13; i++) {
+			if (i < 6) {
+				if (StealReachable[i])
+					counter1++;
+			}
+			if(i > 6){
+				if(StealReachable[i])
+					counter2++;
+			}
+		}
+		if(counter1 < 4) counter1 = 4;
+		if(counter2 < 4) counter2 = 4;
+		
+		for (int i = 5; i >= 0; i--){
+			if(StealReachable[i]){
+				DecisionPriority[i] = counter1;
+				counter1--;
+			}
+		}
+		for(int i = 12; i > 6; i--){
+			if(StealReachable[i]){
+				DecisionPriority[i] = counter2;
+				counter2--;
+			}
+		}
+
 		// add one kudos if the steal reachable is greater than one
 		for (int i = 0; i < 13; i++) {
 			if (i < 6) {
@@ -326,11 +369,11 @@ public class AI {
 		// Display DecisionPriority
 		System.out.print("Decision Priorities:            ");
 		displayPlayerOptionsInt(DecisionPriority);
-		
+
 		// Display P1 Decision
-		System.out.println("Player 1 Decision: "+P1Decision);
+		System.out.println("Player 1 Decision: " + P1Decision);
 		// Display P2 Decision
-		System.out.println("Player 2 Decision: "+P2Decision);
+		System.out.println("Player 2 Decision: " + P2Decision);
 	}
 
 	private void displayPlayer1Options(boolean a_array[]) {

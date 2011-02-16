@@ -1,18 +1,16 @@
 package main;
 
 import java.util.Random;
-import java.awt.Graphics;
+
 /*TODO:
  * 
- * In this class, we should build the gameboard and all of it's properties. So things we should include in here are:
+ * In this class, we should build the game board and all of it's properties. So things we should include in here are:
  * 
  * Each player's pots, with player ownership (although we can do this in the LinkList/Array classes.
  * We should also have win conditions, pot placement in the window, and pool placement.
  * Possibly we should have the score and what not placed in here too referenced from the LinkList/Array classes.
  * 
  */
-
-import javax.swing.JPanel;
 
 public class GameBoard {
 	private int STANDARDBEADS = 3;
@@ -29,6 +27,7 @@ public class GameBoard {
 	private int nextBowl, distributionCounter;
 	private boolean steal, extraTurn;
 	private AI ArtificalInteligence;
+	int GameMode;
 
 	// Initializer
 	public GameBoard(boolean randomize) {
@@ -51,6 +50,7 @@ public class GameBoard {
 		running = true;
 		gameState = "Playing";
 		ArtificalInteligence = new AI(m_bowls);
+		GameMode = 2;
 	}
 
 	// Reset Game board
@@ -177,7 +177,8 @@ public class GameBoard {
 		if (((nextBowl > 6 && currentPlayer == 1) || (nextBowl < 6 && currentPlayer == 2)))
 			steal = false;
 
-		// prevent player from getting an extra when landing in opposing pool
+		// prevent player from getting an extra turn when landing in opposing
+		// pool
 		if (((nextBowl == 6 && currentPlayer == 2) || (nextBowl == 13 && currentPlayer == 1)))
 			extraTurn = false;
 
@@ -193,7 +194,6 @@ public class GameBoard {
 				}
 				m_bowls[oppositeBowl] = 0;
 				System.out.println("STEAL!");
-
 			}
 		}
 		if (extraTurn) {
@@ -235,6 +235,14 @@ public class GameBoard {
 			selectron = 0;
 		}
 	}
+	
+	private void ResetSelectron(){
+		if (currentPlayer == 1) {
+			selectron = 0;
+		} else if (currentPlayer == 2) {
+			selectron = 7;
+		}
+	}
 
 	public int getSelectron() {
 		return selectron;
@@ -272,15 +280,30 @@ public class GameBoard {
 	}
 
 	public void update(int input) {
+		if (gameState != "Distributing")
+			handleGameMode();
+		ArtificalInteligence.update(m_bowls);
 		if (gameState == "Playing") {
 			handleInput(input);
 		} else if (gameState == "Distributing") {
 			handleDistribution(getSelectron());
-		}
+		} else if (gameState == "AI")
+			handleAI(currentPlayer);
 
 		running = !checkGameOverCondition();
-		ArtificalInteligence.update(m_bowls);
-		// if(currentPlayer ==2) AIMove(11);
+	}
+
+	private void handleGameMode() {
+		if (GameMode == 0) {
+			gameState = "Playing";
+		} else if (GameMode == 1) {
+			if (currentPlayer == 1)
+				gameState = "Playing";
+			if (currentPlayer == 2)
+				gameState = "AI";
+		} else if (GameMode == 2) {
+			gameState = "AI";
+		}
 	}
 
 	private void handleDistribution(int index) {
@@ -325,10 +348,31 @@ public class GameBoard {
 		}
 	}
 
-	private void AIMove(int index) {
-		while (selectron < index) {
-			selectron++;
-			// draw(g);
+	private boolean AIMove(int index) {
+		boolean flag = false;
+			if (selectron < index)
+				selectron++;
+			if (selectron > index)
+				selectron--;
+			else if (selectron == index)
+				flag = true;
+		return flag;
+	}
+
+	private void handleAI(int Player) {
+		boolean flag = false;
+		System.out.println(gameState);
+		if (Player == 1) {
+			flag = AIMove(ArtificalInteligence.getPlayer1Decision());
+		}
+		if (Player == 2) {
+			flag = AIMove(ArtificalInteligence.getPlayer2Decision());
+		}
+		if (flag) {
+			gameState = "Distributing";
+			initiateDistributionInstance(getSelectron());
+		}
+		if (gameState == "AI") {
 			Sleep(500);
 		}
 	}

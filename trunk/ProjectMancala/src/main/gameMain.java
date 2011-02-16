@@ -98,12 +98,11 @@ public class gameMain extends JPanel implements MouseListener, KeyListener, Runn
 			g.setFont(big);
 			g.setColor(Color.black);
 			
-			
+			g.drawImage(m_MancalaBoard, 10, 10, null);
 			for(int i=0; i < game.getGameSize(); i++)
 			{
 				g.drawString(game.getBowl(i), game.getBowlLocationX(i),game.getBowlLocationY(i));
 			}
-			g.drawImage(m_MancalaBoard, 10, 10, null);
 		}
 		
 		public gameMain()

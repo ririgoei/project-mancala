@@ -366,7 +366,7 @@ public class GameBoard {
 		if (index == selectron)
 			return "(" + m_bowls[index] + ")";
 		else
-			return "" + m_bowls[index];
+			return " " + m_bowls[index];
 	}
 
 	public int getBowlLocationX(int index) {
